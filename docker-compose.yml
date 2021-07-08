@@ -5,17 +5,22 @@ services:
     image: 'messenger-services:latest'
     build:
       context: ./messenger-services
-    container_name: app
+    container_name: messengerapp
+    environment:
+      - spring_profiles_active=docker
     ports:
       - "8081:8080"
     depends_on:
-      - appdb
+      - messengerappdb
     networks:
       - my-private-network
 
-  appdb:
-    image: 'postgres:13.1-alpine'
-    container_name: appdb
+  messengerappdb:
+    image: 'postgres:13.1-alpine_inclschema'
+    build:
+      context: ./messenger-services
+      dockerfile: DockerfilePostGresDB
+    container_name: messengerappdb
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
