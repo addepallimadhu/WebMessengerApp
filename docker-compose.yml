@@ -1,7 +1,22 @@
 version: '3.9'
 
 services:
-  app:
+  messengerweb:
+    image: 'messenger-ui:latest'
+    build:
+      context: ./messenger-ui
+    container_name: messengerweb
+    ports:
+      - "3002:80"
+    depends_on:
+      - messengerapp
+      - messengerappdb
+    networks:
+      - my-private-network
+    links:
+      - "messengerapp:messengerapp"
+
+  messengerapp:
     image: 'messenger-services:latest'
     build:
       context: ./messenger-services
