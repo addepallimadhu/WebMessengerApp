@@ -1,6 +1,18 @@
 version: '3.9'
 
 services:
+  proxy:
+    build:
+      context: ./messenger-proxy
+    ports:
+      - "3003:3003"
+    depends_on:
+      - messengerapp
+      - messengerweb
+      - messengerappdb
+    networks:
+      - my-private-network
+
   messengerweb:
     image: 'messenger-ui:latest'
     build:
