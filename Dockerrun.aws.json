@@ -56,7 +56,7 @@
         },
         {
             "name": "POSTGRES_PASSWORD",
-            "value": "madMAL123"
+            "value": "****"
         }
         ]
     }
