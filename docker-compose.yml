@@ -51,7 +51,7 @@ services:
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=madMAL123
+      - POSTGRES_PASSWORD=*****
     ports:
       - "54321:5432"
     networks:
