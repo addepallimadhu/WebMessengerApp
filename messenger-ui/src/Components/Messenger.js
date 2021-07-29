@@ -28,11 +28,12 @@ class Messenger extends React.Component {
       `Logged in successfully welcome ${res.profileObj.name} 😍. \n See console for full profile object.`
     );
    console.log(res.profileObj.email);
+   refreshTokenSetup(res);
    
    this.setState( { userName : res.profileObj.email
 		});
 
- fetch(`http://${window.location.host}/api/user/`,
+ fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/user/`,
     {
       method: 'POST',
       headers: {
@@ -47,7 +48,16 @@ class Messenger extends React.Component {
     }
     )
 
-  fetch(`http://${window.location.host}/api/user/otherUsers/${this.state.userName}`)
+  fetch(`http://${window.location.host}/api/user/otherUsers/${this.state.userName}`,
+   {
+     method: 'GET',
+     headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization' : 'Bearer ' + localStorage.authToken
+          }
+   }
+   )
        	 .then(resp => (resp.json()))
                    .then (resp_json => (this.setState({
 			users : resp_json ,
@@ -56,7 +66,7 @@ class Messenger extends React.Component {
  //this.setState ({ otherUser: this.state.users[0]
 //		});
 
-    refreshTokenSetup(res);
+   
   };
 
   const onFailure = (res) => {
@@ -129,7 +139,7 @@ const userOption = (obj) =>
 
     console.log(newItem.text);
 
-    fetch(`http://${window.location.host}/api/message/`,
+    fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/message/`,
     {
       method: 'POST',
       headers: {
@@ -165,7 +175,7 @@ class TodoList extends React.Component {
 
  console.log(this.props.userName);
 
-      fetch(`http://${window.location.host}/api/message/?sender=${this.props.userName}&receiver=${this.props.otherUser}`,
+      fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/message/?sender=${this.props.userName}&receiver=${this.props.otherUser}`,
       {
         method: 'GET',
         headers: {
