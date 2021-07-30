@@ -1,7 +1,8 @@
-version: '3.9'
+version: '3'
 
 services:
-  proxy:
+  messengerproxy:
+    image: 'addepallimadhu/messenger-proxy:latest'
     build:
       context: ./messenger-proxy
     ports:
@@ -14,12 +15,12 @@ services:
       - my-private-network
 
   messengerweb:
-    image: 'messenger-ui:latest'
+    image: 'addepallimadhu/messenger-ui:latest'
     build:
       context: ./messenger-ui
     container_name: messengerweb
     ports:
-      - "3002:80"
+      - "80:80"
     depends_on:
       - messengerapp
       - messengerappdb
@@ -29,21 +30,21 @@ services:
       - "messengerapp:messengerapp"
 
   messengerapp:
-    image: 'messenger-services:latest'
+    image: 'addepallimadhu/messenger-services:latest'
     build:
       context: ./messenger-services
     container_name: messengerapp
     environment:
       - spring_profiles_active=docker
     ports:
-      - "8081:8080"
+      - "8080:8080"
     depends_on:
       - messengerappdb
     networks:
       - my-private-network
 
   messengerappdb:
-    image: 'postgres:13.1-alpine_inclschema'
+    image: 'addepallimadhu/messenger-db:latest'
     build:
       context: ./messenger-services
       dockerfile: DockerfilePostGresDB
@@ -53,7 +54,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=*****
     ports:
-      - "54321:5432"
+      - "5432:5432"
     networks:
       - my-private-network
 
