@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\addepmm\Downloads\kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: messengerproxy
+  name: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: messengerproxy
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\addepmm\Downloads\kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/my-private-network: "true"
+        io.kompose.service: messengerproxy
+    spec:
+      containers:
+      - image: addepallimadhu/messenger-proxy:latest
+        imagePullPolicy: ""
+        name: messengerproxy
+        ports:
+        - containerPort: 3003
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

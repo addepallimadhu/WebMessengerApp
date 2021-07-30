@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\addepmm\Downloads\kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: messengerweb
+  name: messengerweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: messengerweb
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\addepmm\Downloads\kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/my-private-network: "true"
+        io.kompose.service: messengerweb
+    spec:
+      containers:
+      - image: addepallimadhu/messenger-ui:latest
+        imagePullPolicy: ""
+        name: messengerweb
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
