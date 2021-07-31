@@ -2,12 +2,18 @@ import React, {Component} from 'react';
 import ReactDOM from 'react';
 import '../App.css';
 
-import { GoogleLogin } from 'react-google-login';
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
 // refresh token
 import { refreshTokenSetup } from '../Utils/RefreshToken';
 
 const clientId =
   '1006529598178-qes2svv7q1t0a6pfgq01gq1te9fosee6.apps.googleusercontent.com';
+
+const apiUrl = () => { if (process.env.REACT_APP_API_URL === undefined) 
+				return window.location.protocol + "//" + window.location.host + "/api";
+			else 
+				return process.env.REACT_APP_API_URL;	
+		       }
 
 // var otherUser;
 
@@ -21,7 +27,8 @@ class Messenger extends React.Component {
 // 
 
   render() {
-
+ //   console.log(apiUrl()); 
+  //  console.log(process.env.REACT_APP_API_URL);	
     const onSuccess = (res) => {
     console.log('Login Success: currentUser:', res.profileObj);
     alert(
@@ -33,7 +40,7 @@ class Messenger extends React.Component {
    this.setState( { userName : res.profileObj.email
 		});
 
- fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/user/`,
+ fetch(`${apiUrl()}/user/`,
     {
       method: 'POST',
       headers: {
@@ -48,7 +55,7 @@ class Messenger extends React.Component {
     }
     )
 
-  fetch(`http://${window.location.host}/api/user/otherUsers/${this.state.userName}`,
+  fetch(`${apiUrl()}/user/otherUsers/${this.state.userName}`,
    {
      method: 'GET',
      headers: {
@@ -76,6 +83,14 @@ class Messenger extends React.Component {
     );
   };
 
+ const onLogoutSuccess = () => { 
+    this.setState( { otherUser : '', text: '', userName : '', users: []
+		});	
+    console.log('Logout made successfully');
+    alert('Logout made successfully ✌');
+  };
+
+
  const handleChange = (event) => {
   this.setState({ otherUser : event.target.value
 		})
@@ -88,8 +103,8 @@ const userOption = (obj) =>
          //         console.log(obj);
 	return  <option>{obj.username}</option>;
           }
-   console.log('INSIDE MESSENGER RENDER');
-   console.log(this.state)
+ //  console.log('INSIDE MESSENGER RENDER');
+  // console.log(this.state)
 
     return (
       <div>
@@ -118,7 +133,13 @@ const userOption = (obj) =>
           <button>
             Send
           </button>
+	
         </form>
+	<GoogleLogout
+        clientId={clientId}
+        buttonText="Logout"
+        onLogoutSuccess={onLogoutSuccess}
+      ></GoogleLogout>
       </div>
     );
   }
@@ -139,7 +160,7 @@ const userOption = (obj) =>
 
     console.log(newItem.text);
 
-    fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/message/`,
+    fetch(`${apiUrl()}/message/`,
     {
       method: 'POST',
       headers: {
@@ -173,9 +194,9 @@ class TodoList extends React.Component {
     tick() {
       var newMessages = [];
 
- console.log(this.props.userName);
+// console.log(this.props.userName);
 
-      fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/message/?sender=${this.props.userName}&receiver=${this.props.otherUser}`,
+      fetch(`${apiUrl()}/message/?sender=${this.props.userName}&receiver=${this.props.otherUser}`,
       {
         method: 'GET',
         headers: {
