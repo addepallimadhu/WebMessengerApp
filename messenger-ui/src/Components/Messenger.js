@@ -33,7 +33,7 @@ class Messenger extends React.Component {
    this.setState( { userName : res.profileObj.email
 		});
 
- fetch(`http://${window.location.host}/api/user/`,
+ fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/user/`,
     {
       method: 'POST',
       headers: {
@@ -139,7 +139,7 @@ const userOption = (obj) =>
 
     console.log(newItem.text);
 
-    fetch(`http://${window.location.host}/api/message/`,
+    fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/message/`,
     {
       method: 'POST',
       headers: {
@@ -175,7 +175,7 @@ class TodoList extends React.Component {
 
  console.log(this.props.userName);
 
-      fetch(`http://${window.location.host}/api/message/?sender=${this.props.userName}&receiver=${this.props.otherUser}`,
+      fetch(`http://${window.location.hostname}:${process.env.REACT_APP_API_PORT}/api/message/?sender=${this.props.userName}&receiver=${this.props.otherUser}`,
       {
         method: 'GET',
         headers: {
