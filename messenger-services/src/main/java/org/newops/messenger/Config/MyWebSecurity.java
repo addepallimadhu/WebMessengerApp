@@ -36,6 +36,12 @@ public class MyWebSecurity extends WebSecurityConfigurerAdapter {
     private String jwkSetUri;
 
     @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers(HttpMethod.OPTIONS);
+
+    }
+    
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
