@@ -30,4 +30,4 @@ Application will be accessible from the EBS link available in the AWS console
   
 curl -X POST -H "Content-Type: application/json"  --data-raw "{\"username\": \"test123@gmail.com\", \"userdisplayname\": \"TEST 123\"}'"  "http://localhost:8080/api/user/"
   
-curl -X POST -H "Content-Type: application/json"  -H "Authorization: <bearer token>"  --data-raw "{\"sender\": \"test123@gmail.com\", \"receiver\": \"addepallimadhumalhar@gmail.com\", \"message\": \"Hello From  Curl\"}'"  "http://localhost:8080/api/message/"
+curl -X POST -H "Content-Type: application/json"  -H "Authorization: Bearer <_paste token here_>"  --data-raw "{\"sender\": \"test123@gmail.com\", \"receiver\": \"addepallimadhumalhar@gmail.com\", \"message\": \"Hello From  Curl\"}'"  "http://localhost:8080/api/message/"
