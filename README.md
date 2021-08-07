@@ -27,3 +27,7 @@ Run docker-compose up. It will bring up the application on port 3003
 Zip all contents exluding the parent folder and upload it to you Bean stalk application
 For EC2 Use a t2 medium or better configuration 
 Application will be accessible from the EBS link available in the AWS console
+  
+curl -X POST -H "Content-Type: application/json"  --data-raw "{\"username\": \"test123@gmail.com\", \"userdisplayname\": \"TEST 123\"}'"  "http://localhost:8080/api/user/"
+  
+curl -X POST -H "Content-Type: application/json"  -H "Authorization: <bearer token>"  --data-raw "{\"sender\": \"test123@gmail.com\", \"receiver\": \"addepallimadhumalhar@gmail.com\", \"message\": \"Hello From  Curl\"}'"  "http://localhost:8080/api/message/"
