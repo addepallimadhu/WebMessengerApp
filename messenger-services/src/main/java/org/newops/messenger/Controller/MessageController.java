@@ -23,7 +23,7 @@ public class MessageController {
 //   public ResponseEntity<?> getMessages(@PathVariable("otherUser") String otherUser){
       @GetMapping("/")
    public ResponseEntity<?> getMessages(@RequestParam("sender") String Sender,@RequestParam("receiver") String Receiver){
-        System.out.println("GETTING CONVERSATION : " + Receiver);
+   //     System.out.println("GETTING CONVERSATION : " + Receiver);
         List<Message> messageOutput = mService.getConversation(Sender,Receiver);
         return new ResponseEntity<>(messageOutput, HttpStatus.OK);
     }
