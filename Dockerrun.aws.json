@@ -1,66 +1,27 @@
 {
     "AWSEBDockerrunVersion": 2,
     "containerDefinitions": [
+      
     {
-    "name" : "messengerproxy",
-    "image" : "addepallimadhu/messengerproxy:latest",
-    "hostname" : "messengerproxy",
-    "essential" : true,
-    "portMappings": [
+     "name" : "messengerlight",
+     "image" : "addepallimadhu/messengerlight:latest",
+     "hostname" : "messengerlight",
+     "essential" : true,
+     "portMappings": [
         {
             "hostPort" : 80,
-	    "containerPort" : 3003
+	    "containerPort" : 8080
         }
-    ],
-    "links" : ["messengerapp","messengerweb"],
-    "memory" : 100
-    },
-    {
-     "name" : "messengerweb",
-     "image" : "addepallimadhu/messengerweb:latest",
-     "hostname" : "messengerweb",
-     "essential" : true
-     "memory" : 300,
-     "links" : ["messengerapp"]
-    },
-    
-    {
-     "name" : "messengerapp",
-     "image" : "addepallimadhu/messengerapp:latest",
-     "hostname" : "messengerapp",
-     "essential" : true,
-     "memory" : 300,
-     "links" : ["messengerappdb"],
+     ],
+     "memory" : 600,
      "environment": [
          {
              "name": "spring_profiles_active",
-             "value": "docker"
+             "value": "awssandbox"
          }
         ]
-    },
-    
-    {
-     "name" : "messengerappdb",
-     "image" : "addepallimadhu/messengerappdb:latest",
-     "hostname" : "messengerappdb",
-     "essential" : true,
-     "memory" : 300,
-     "environment": [
-         {
-             "name": "POSTGRES_DB",
-             "value": "postgres"
-         },
-         {
-            "name": "POSTGRES_USER",
-            "value": "postgres"
-        },
-        {
-            "name": "POSTGRES_PASSWORD",
-            "value": "****"
-        }
-        ]
     }
-    ]
+        ]
 }
 
 

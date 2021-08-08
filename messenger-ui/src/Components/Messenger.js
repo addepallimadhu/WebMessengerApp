@@ -9,7 +9,7 @@ import { refreshTokenSetup } from '../Utils/RefreshToken';
 const clientId =
   '1006529598178-qes2svv7q1t0a6pfgq01gq1te9fosee6.apps.googleusercontent.com';
 
-const apiUrl = () => { if (process.env.REACT_APP_API_PORT === 80) 
+const apiUrl = () => { if (process.env.REACT_APP_API_PORT == 80) 
 				return window.location.protocol + "//" + window.location.host + "/api";
 			else 
 				return window.location.protocol + "//" + window.location.hostname + ":" + process.env.REACT_APP_API_PORT + "/api";	
