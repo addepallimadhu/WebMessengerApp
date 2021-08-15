@@ -4,6 +4,9 @@ import org.newops.messenger.Model.Message;
 import org.newops.messenger.Repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -15,11 +18,8 @@ public class MessageService {
 
     public List<Message> getConversation(String Sender,String Receiver){
       
-       List<Message> mergedConversation = new ArrayList<>();
-       mergedConversation .addAll(mRep.findBySenderAndReceiver(Sender,Receiver));
-       mergedConversation .addAll(mRep.findBySenderAndReceiver(Receiver,Sender));
-       return mergedConversation;
-//        return mRep.findBySenderAndReceiver(Sender,Receiver);
+
+       return mRep.getConversation(Sender,Receiver) ;
 
     }
 
