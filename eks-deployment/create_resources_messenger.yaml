@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: messengerapp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messengerapp
+  namespace: messengerapp
+  labels:
+    app: messenger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messenger
+  template:
+    metadata:
+      labels:
+        app: messenger
+    spec:
+      containers:
+      - name: messengerapp
+        image: addepallimadhu/messenger-services
+        env:
+        - name: spring_profiles_active
+          value: awssandbox
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messenger
+  namespace: messengerapp
+spec:
+  type: NodePort
+  selector:
+    app: messenger
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30003
+
