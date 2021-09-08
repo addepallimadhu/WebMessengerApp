@@ -1,3 +1,14 @@
 apiVersion: v1
-entries: {}
-generated: "2021-09-07T22:42:04.7293643+05:30"
+entries:
+  messenger:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2021-09-08T18:14:48.7159723+05:30"
+    description: A Helm chart for Kubernetes
+    digest: 32ebeaedbd0c692cf3b8ed3f6846b51b0965870a6108f1188c10734239045b7a
+    name: messenger
+    type: application
+    urls:
+    - messenger-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-09-08T18:14:48.7143969+05:30"
