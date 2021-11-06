@@ -38,23 +38,41 @@
 }
 
 .Messages-box {
- border: 1px solid rgb(243, 47, 80);
- 
+  border: 3px solid rgb(13, 85, 219);
+  border-radius: 2%;
+  margin-left: 20%;
+  margin-right: 20%;
 }
 
 .Message-text {
- 
-text-align: left ;
-
+  text-align: left;
 }
 
-.Message-element{
- 
-  border: 1px solid gray;
+.Message-element {
+  border: 0px solid gray;
+  border-radius: 3px;
+  background-color: rgb(142, 241, 102);
   margin-left: 40%;
-  margin-top: 1px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   padding-left: 10px;
   padding-top: 0px;
   text-align: left;
-    
-  }
+}
+
+.Received-Message-element {
+  border: 0px solid gray;
+  border-radius: 3px;
+  background-color: rgb(74, 110, 231);
+  margin-right: 40%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  padding-left: 10px;
+  padding-top: 0px;
+  text-align: left;
+}
+
+.Message-time {
+  font-size: 8px;
+}
