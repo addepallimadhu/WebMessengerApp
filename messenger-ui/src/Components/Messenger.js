@@ -1,156 +1,90 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import ReactDOM from "react";
 import "../App.css";
+import MessageBox from "./MessageBox";
 
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 // refresh token
 import { refreshTokenSetup } from "../Utils/RefreshToken";
+import apiUrl from "../Utils/ApiUrl";
 
 const clientId =
   "1006529598178-qes2svv7q1t0a6pfgq01gq1te9fosee6.apps.googleusercontent.com";
 
-const apiUrl = () => {
-  if (process.env.REACT_APP_API_PORT == 80)
-    return window.location.protocol + "//" + window.location.host + "/api";
-  else
-    return (
-      window.location.protocol +
-      "//" +
-      window.location.hostname +
-      ":" +
-      process.env.REACT_APP_API_PORT +
-      "/api"
+function Messenger(props) {
+  const [otherUser, setOtherUser] = useState("");
+  const [text, setText] = useState("");
+  const [userName, setUserName] = useState("");
+  const [users, setUsers] = useState([]);
+
+  const onSuccess = (res) => {
+    console.log("Login Success: currentUser:", res.profileObj);
+    alert(
+      `Logged in successfully welcome ${res.profileObj.name} 😍. \n See console for full profile object.`
     );
-};
+    console.log(res.profileObj.email);
+    refreshTokenSetup(res);
 
-// var otherUser;
+    setUserName(res.profileObj.email);
 
-class Messenger extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { otherUser: "", text: "", userName: "", users: [] };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  //
+    fetch(`${apiUrl()}/user/`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: res.profileObj.email,
+        userdisplayname: res.profileObj.name,
+      }),
+    });
 
-  render() {
-    //   console.log(apiUrl());
-    //  console.log(process.env.REACT_APP_API_URL);
-    const onSuccess = (res) => {
-      console.log("Login Success: currentUser:", res.profileObj);
-      alert(
-        `Logged in successfully welcome ${res.profileObj.name} 😍. \n See console for full profile object.`
-      );
-      console.log(res.profileObj.email);
-      refreshTokenSetup(res);
-
-      this.setState({ userName: res.profileObj.email });
-
-      fetch(`${apiUrl()}/user/`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: res.profileObj.email,
-          userdisplayname: res.profileObj.name,
-        }),
+    fetch(`${apiUrl()}/user/otherUsers/${res.profileObj.email}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.authToken,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((resp_json) => {
+        setUsers(resp_json);
+        setOtherUser(resp_json[0].username);
       });
+  };
 
-      fetch(`${apiUrl()}/user/otherUsers/${this.state.userName}`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.authToken,
-        },
-      })
-        .then((resp) => resp.json())
-        .then((resp_json) =>
-          this.setState({
-            users: resp_json,
-            otherUser: resp_json[0].username,
-          })
-        );
-    };
+  const onFailure = (res) => {
+    console.log("Login failed: res:", res);
+    alert(`Failed to login. 😢 `);
+  };
 
-    const onFailure = (res) => {
-      console.log("Login failed: res:", res);
-      alert(`Failed to login. 😢 `);
-    };
+  const onLogoutSuccess = () => {
+    setOtherUser("");
+    setText("");
+    setUserName("");
+    setUsers([]);
+    console.log("Logout made successfully");
+    alert("Logout made successfully ✌");
+  };
 
-    const onLogoutSuccess = () => {
-      this.setState({ otherUser: "", text: "", userName: "", users: [] });
-      console.log("Logout made successfully");
-      alert("Logout made successfully ✌");
-    };
+  const handleChange = (event) => {
+    setOtherUser(event.target.value);
+  };
 
-    const handleChange = (event) => {
-      this.setState({ otherUser: event.target.value });
-    };
+  const userOption = (obj) => {
+    return <option>{obj.username}</option>;
+  };
 
-    const userOption = (obj) => {
-      //         console.log(obj);
-      return <option>{obj.username}</option>;
-    };
-    //  console.log('INSIDE MESSENGER RENDER');
-    // console.log(this.state)
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+  };
 
-    return (
-      <div>
-        <GoogleLogin
-          clientId={clientId}
-          buttonText="Login"
-          onSuccess={onSuccess}
-          onFailure={onFailure}
-          cookiePolicy={"single_host_origin"}
-          style={{ marginTop: "100px" }}
-          isSignedIn={true}
-        />
-        <b>Logged in as : {this.state.userName}</b>
-        <br />
-        <select id="users" name="users" onChange={handleChange}>
-          {this.state.users.map(userOption)}
-        </select>
-        <TodoList
-          userName={this.state.userName}
-          otherUser={this.state.otherUser}
-        />
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="new-todo">Enter your message here...</label>
-          <input
-            id="new-todo"
-            onChange={this.handleChange}
-            value={this.state.text}
-          />
-          <button>Send</button>
-        </form>
-        <GoogleLogout
-          clientId={clientId}
-          buttonText="Logout"
-          onLogoutSuccess={onLogoutSuccess}
-        ></GoogleLogout>
-      </div>
-    );
-  }
-
-  handleChange(e) {
-    this.setState({ text: e.target.value });
-  }
-
-  handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (this.state.text.length === 0) {
+    if (text.length === 0) {
       return;
     }
-    const newItem = {
-      text: this.state.text,
-      id: Date.now(),
-    };
-
-    console.log(newItem.text);
 
     fetch(`${apiUrl()}/message/`, {
       method: "POST",
@@ -160,89 +94,44 @@ class Messenger extends React.Component {
         Authorization: "Bearer " + localStorage.authToken,
       },
       body: JSON.stringify({
-        sender: this.state.userName,
-        receiver: this.state.otherUser,
-        message: newItem.text,
+        sender: userName,
+        receiver: otherUser,
+        message: text,
       }),
     }).then(() => {
       console.log("MESSAGE SENT");
     });
-  }
+  };
+
+  return (
+    <div>
+      <GoogleLogin
+        clientId={clientId}
+        buttonText="Login"
+        onSuccess={onSuccess}
+        onFailure={onFailure}
+        cookiePolicy={"single_host_origin"}
+        style={{ marginTop: "100px" }}
+        isSignedIn={true}
+      />
+      <b>Logged in as : {userName}</b>
+      <br />
+      <select id="users" name="users" onChange={handleChange}>
+        {users.map(userOption)}
+      </select>
+      <MessageBox userName={userName} otherUser={otherUser} />
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="new-todo">Enter your message here...</label>
+        <input id="new-todo" onChange={handleTextChange} value={text} />
+        <button>Send</button>
+      </form>
+      <GoogleLogout
+        clientId={clientId}
+        buttonText="Logout"
+        onLogoutSuccess={onLogoutSuccess}
+      ></GoogleLogout>
+    </div>
+  );
 }
-
-class TodoList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { messages: [] };
-  }
-
-  tick() {
-    var newMessages = [];
-
-    // console.log(this.props.userName);
-
-    fetch(
-      `${apiUrl()}/message/?sender=${this.props.userName}&receiver=${
-        this.props.otherUser
-      }`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.authToken,
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((messages) => {
-        this.setState({
-          messages: messages,
-        });
-      });
-  }
-
-  componentDidMount() {
-    this.interval = setInterval(() => this.tick(), 1000);
-    console.log("Inside did Mount");
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  render() {
-    const message = (item) => {
-      let message;
-      let messageDate = new Date(item.time);
-      if (item.sender === this.props.userName) {
-        message = (
-          <div className="Message-element">
-            {item.message}{" "}
-            <span className="Message-time">{messageDate.toLocaleString()}</span>
-          </div>
-        );
-      } else {
-        message = (
-          <div className="Received-Message-element">
-            {item.message}{" "}
-            <span className="Message-time">{messageDate.toLocaleString()}</span>
-          </div>
-        );
-      }
-      return message;
-    };
-    // console.log("INSIDE RENDER");
-    // console.log(this.props.userName);
-
-    return (
-      <div className="Messages-box">
-        {this.state.messages.map((item) => message(item))}
-      </div>
-    );
-  }
-}
-
+//}
 export default Messenger;
-
-//
