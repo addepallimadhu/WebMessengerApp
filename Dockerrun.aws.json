@@ -1,28 +1,24 @@
 {
-    "AWSEBDockerrunVersion": 2,
-    "containerDefinitions": [
-      
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
     {
-     "name" : "messengerlight",
-     "image" : "addepallimadhu/messengerlight:latest",
-     "hostname" : "messengerlight",
-     "essential" : true,
-     "portMappings": [
+      "name": "messengerlight",
+      "image": "addepallimadhu/messenger-services:latest",
+      "hostname": "messengerlight",
+      "essential": true,
+      "portMappings": [
         {
-            "hostPort" : 80,
-	    "containerPort" : 8080
+          "hostPort": 80,
+          "containerPort": 8080
         }
-     ],
-     "memory" : 600,
-     "environment": [
-         {
-             "name": "spring_profiles_active",
-             "value": "awssandbox"
-         }
-        ]
+      ],
+      "memory": 600,
+      "environment": [
+        {
+          "name": "spring_profiles_active",
+          "value": "awssandbox"
+        }
+      ]
     }
-        ]
+  ]
 }
-
-
-    

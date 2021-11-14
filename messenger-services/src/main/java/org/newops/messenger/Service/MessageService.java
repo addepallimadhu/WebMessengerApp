@@ -4,31 +4,21 @@ import org.newops.messenger.Model.Message;
 import org.newops.messenger.Repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
 @Service
-public class MessageService {
+public class MessageService extends BaseService{
 
     @Autowired
     MessageRepository mRep;
 
-    public List<Message> getConversation(String Sender,String Receiver){
-      
-
-       return mRep.getConversation(Sender,Receiver) ;
+    public List<Message> getConversation(String Receiver){
+       return mRep.getConversation(getCurrentUserName(),Receiver) ;
 
     }
 
-    public void sendMessage(String Sender, String Receiver,String Message){
-        Message msg = new Message(Sender,Receiver,Message);
+    public void sendMessage( String Receiver,String Message){
+        Message msg = new Message(getCurrentUserName(),Receiver,Message);
         mRep.save(msg);
     }
-
-   public List<String> getOtherUsers(String myUserName){
-     return mRep.findDistinctBySenderNot(myUserName);
- }
 }

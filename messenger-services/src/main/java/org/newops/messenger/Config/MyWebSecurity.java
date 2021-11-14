@@ -51,8 +51,6 @@ public class MyWebSecurity extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .csrf().disable()
                 .authorizeRequests().antMatchers("/api/").permitAll()
-                .antMatchers("/api/user/").permitAll()
-           //     .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and().oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
 

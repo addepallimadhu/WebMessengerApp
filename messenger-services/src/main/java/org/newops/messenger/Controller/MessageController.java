@@ -19,27 +19,16 @@ public class MessageController {
     @Autowired
     MessageService mService;
 
- // @GetMapping("/{otherUser}")
-//   public ResponseEntity<?> getMessages(@PathVariable("otherUser") String otherUser){
-      @GetMapping("/")
-   public ResponseEntity<?> getMessages(@RequestParam("sender") String Sender,@RequestParam("receiver") String Receiver){
-   //     System.out.println("GETTING CONVERSATION : " + Receiver);
-        List<Message> messageOutput = mService.getConversation(Sender,Receiver);
+    @GetMapping("/")
+   public ResponseEntity<?> getMessages(@RequestParam("receiver") String Receiver)
+    {
+        List<Message> messageOutput = mService.getConversation(Receiver);
         return new ResponseEntity<>(messageOutput, HttpStatus.OK);
     }
-// @RequestParam("sender") String Sender,@RequestParam("receiver") String Receiver,
     @PostMapping("/")
-    public ResponseEntity<?> sendMessages( @RequestBody Message messageBody ){
-
-        System.out.println("SENDING MESSAGE : " + messageBody.getSender());
-        mService.sendMessage(messageBody.getSender(),messageBody.getReceiver(),messageBody.getMessage());
+    public ResponseEntity<?> sendMessages( @RequestBody Message messageBody )
+    {
+        mService.sendMessage(messageBody.getReceiver(),messageBody.getMessage());
         return new ResponseEntity<>("SENT SUCCESSFULLY", HttpStatus.OK);
     }
-
-    @GetMapping("/otherUsers/{myUserName}")
-    public ResponseEntity<?> getUsers(@PathVariable("myUserName") String myUserName){
-
-     List<String> users = mService.getOtherUsers(myUserName);
-     return new ResponseEntity<>(users, HttpStatus.OK);
-   }	
 }

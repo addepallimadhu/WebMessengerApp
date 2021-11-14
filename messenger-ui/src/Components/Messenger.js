@@ -15,31 +15,31 @@ function Messenger(props) {
   const [otherUser, setOtherUser] = useState("");
   const [text, setText] = useState("");
   const [userName, setUserName] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [users, setUsers] = useState([]);
+  const [isOtherUserSelected, setIsOtherUserSelected] = useState(false);
 
   const onSuccess = (res) => {
     console.log("Login Success: currentUser:", res.profileObj);
     alert(
       `Logged in successfully welcome ${res.profileObj.name} 😍. \n See console for full profile object.`
     );
-    console.log(res.profileObj.email);
+
     refreshTokenSetup(res);
 
     setUserName(res.profileObj.email);
+    setIsLoggedIn(true);
 
     fetch(`${apiUrl()}/user/`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.authToken,
       },
-      body: JSON.stringify({
-        username: res.profileObj.email,
-        userdisplayname: res.profileObj.name,
-      }),
     });
 
-    fetch(`${apiUrl()}/user/otherUsers/${res.profileObj.email}`, {
+    fetch(`${apiUrl()}/user/otherUsers/`, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -51,6 +51,7 @@ function Messenger(props) {
       .then((resp_json) => {
         setUsers(resp_json);
         setOtherUser(resp_json[0].username);
+        if (resp_json[0].username != undefined) setIsOtherUserSelected(true);
       });
   };
 
@@ -64,12 +65,16 @@ function Messenger(props) {
     setText("");
     setUserName("");
     setUsers([]);
+    setIsLoggedIn(false);
+    setIsOtherUserSelected(false);
     console.log("Logout made successfully");
     alert("Logout made successfully ✌");
   };
 
   const handleChange = (event) => {
+    console.log(event);
     setOtherUser(event.target.value);
+    setIsOtherUserSelected(true);
   };
 
   const userOption = (obj) => {
@@ -94,42 +99,58 @@ function Messenger(props) {
         Authorization: "Bearer " + localStorage.authToken,
       },
       body: JSON.stringify({
-        sender: userName,
         receiver: otherUser,
         message: text,
       }),
     }).then(() => {
       console.log("MESSAGE SENT");
+      setText("");
     });
   };
 
   return (
     <div>
-      <GoogleLogin
-        clientId={clientId}
-        buttonText="Login"
-        onSuccess={onSuccess}
-        onFailure={onFailure}
-        cookiePolicy={"single_host_origin"}
-        style={{ marginTop: "100px" }}
-        isSignedIn={true}
-      />
-      <b>Logged in as : {userName}</b>
-      <br />
-      <select id="users" name="users" onChange={handleChange}>
-        {users.map(userOption)}
-      </select>
-      <MessageBox userName={userName} otherUser={otherUser} />
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="new-todo">Enter your message here...</label>
-        <input id="new-todo" onChange={handleTextChange} value={text} />
-        <button>Send</button>
-      </form>
-      <GoogleLogout
-        clientId={clientId}
-        buttonText="Logout"
-        onLogoutSuccess={onLogoutSuccess}
-      ></GoogleLogout>
+      {isLoggedIn ? (
+        <div>
+          <GoogleLogout
+            clientId={clientId}
+            buttonText="Logout"
+            onLogoutSuccess={onLogoutSuccess}
+          ></GoogleLogout>
+          <b> Logged in as : {userName} </b>
+          <br /> <br />
+          <select id="users" name="users" onChange={handleChange}>
+            {users.map(userOption)}
+          </select>
+          <br /> <br />
+        </div>
+      ) : (
+        <div>
+          <GoogleLogin
+            clientId={clientId}
+            buttonText="Login"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            cookiePolicy={"single_host_origin"}
+            style={{ marginTop: "100px" }}
+            isSignedIn={true}
+          />
+          <b> Please login with you email id to get started</b>
+        </div>
+      )}
+
+      {isOtherUserSelected ? (
+        <div>
+          <MessageBox userName={userName} otherUser={otherUser} />
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="new-todo">Enter your message here...</label>
+            <input id="new-todo" onChange={handleTextChange} value={text} />
+            <button>Send</button>
+          </form>
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }

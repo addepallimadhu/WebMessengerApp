@@ -20,19 +20,17 @@ public class UserController {
     UserService uService;
  
     @PostMapping("/")
-    public ResponseEntity<?> addUser( @RequestBody User userBody ){
-
-        System.out.println("SENDING USER	 : " + userBody.getUsername());
-        uService.addOrUpdateUser(userBody.getUsername(), userBody.getUserdisplayname());
+    public ResponseEntity<?> addUser()
+    {
+        uService.addOrUpdateUser();
         return new ResponseEntity<>("ADDED / UPDATED SUCCESSFULLY	", HttpStatus.OK);
     }
 
-   @GetMapping("/otherUsers/{myUserName}")
-    public ResponseEntity<?> getOtherUsers( @PathVariable("myUserName") String myUserName){
-
-    
-        List<User> users = uService.getOtherUsers(myUserName) ;
-        return new ResponseEntity<>(users , HttpStatus.OK);
+   @GetMapping("/otherUsers/")
+    public ResponseEntity<?> getOtherUsers()
+   {
+       List<User> users = uService.getOtherUsers() ;
+       return new ResponseEntity<>(users , HttpStatus.OK);
     }
 
  }

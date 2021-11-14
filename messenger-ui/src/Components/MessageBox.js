@@ -10,19 +10,14 @@ function MessageBox(props) {
 
   useEffect(() => {
     const tick = () => {
-      fetch(
-        `${apiUrl()}/message/?sender=${props.userName}&receiver=${
-          props.otherUser
-        }`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.authToken,
-          },
-        }
-      )
+      fetch(`${apiUrl()}/message/?receiver=${props.otherUser}`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.authToken,
+        },
+      })
         .then((resp) => resp.json())
         .then((messages) => {
           setMessages(messages);

@@ -8,31 +8,30 @@ import java.util.List;
 import java.util.ArrayList;
 
 @Service
-public class UserService {
+public class UserService extends BaseService {
 
     @Autowired
     UserRepository uRep;
 
-       
-   public void addOrUpdateUser(String UserName, String UserDisplayName){
+    public void addOrUpdateUser(){
         
-  	User usrdb = uRep.findFirstByUsername(UserName);
+  	User usrdb = uRep.findFirstByUsername(getCurrentUserName());
 	if ( usrdb != null) {
-                    usrdb.setUserdisplayname(UserDisplayName);
+                    usrdb.setUserdisplayname(getCurrentUserDisplayName());
                    uRep.save(usrdb);
 	}
                   else {
                 User usr = new User();
-                usr.setUsername(UserName);
-                usr.setUserdisplayname(UserDisplayName);
+                usr.setUsername(getCurrentUserName());
+                usr.setUserdisplayname(getCurrentUserDisplayName());
                 uRep.save(usr);
 	}
 
                
     }
 
-  public List<User> getOtherUsers(String myUserName){
-     return uRep.findByUsernameNot(myUserName);
+  public List<User> getOtherUsers(){
+     return uRep.findByUsernameNot(getCurrentUserName());
  }
  
 }
