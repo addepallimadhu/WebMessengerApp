@@ -7,6 +7,7 @@ import { GoogleLogin, GoogleLogout } from "react-google-login";
 // refresh token
 import { refreshTokenSetup } from "../Utils/RefreshToken";
 import apiUrl from "../Utils/ApiUrl";
+import UserDropDown from "./UserDropDown";
 
 const clientId =
   "1006529598178-qes2svv7q1t0a6pfgq01gq1te9fosee6.apps.googleusercontent.com";
@@ -38,21 +39,6 @@ function Messenger(props) {
         Authorization: "Bearer " + localStorage.authToken,
       },
     });
-
-    fetch(`${apiUrl()}/user/otherUsers/`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.authToken,
-      },
-    })
-      .then((resp) => resp.json())
-      .then((resp_json) => {
-        setUsers(resp_json);
-        setOtherUser(resp_json[0].username);
-        if (resp_json[0].username != undefined) setIsOtherUserSelected(true);
-      });
   };
 
   const onFailure = (res) => {
@@ -72,7 +58,6 @@ function Messenger(props) {
   };
 
   const handleChange = (event) => {
-    console.log(event);
     setOtherUser(event.target.value);
     setIsOtherUserSelected(true);
   };
@@ -103,7 +88,6 @@ function Messenger(props) {
         message: text,
       }),
     }).then(() => {
-      console.log("MESSAGE SENT");
       setText("");
     });
   };
@@ -119,9 +103,10 @@ function Messenger(props) {
           ></GoogleLogout>
           <b> Logged in as : {userName} </b>
           <br /> <br />
-          <select id="users" name="users" onChange={handleChange}>
-            {users.map(userOption)}
-          </select>
+          <UserDropDown
+            getBackSelectedUser={setOtherUser}
+            getBackIsOtherUserSelected={setIsOtherUserSelected}
+          />
           <br /> <br />
         </div>
       ) : (
