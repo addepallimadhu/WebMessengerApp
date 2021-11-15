@@ -4,7 +4,9 @@ A browser based messaging application using Google Authentication
 
 ## Sample Deployed Application
 
-[Simple Web Messenger](https://simplewebmessenger.herokuapp.com/)
+[Simple Web Messenger](https://simplewebmessenger.herokuapp.com/) 
+
+![image](https://user-images.githubusercontent.com/49113120/141827482-8796d579-a2f4-42f0-bd98-bf888658ef69.png)
 
 ## Instructions to run and develop on Local desktop
 
